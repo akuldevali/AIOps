@@ -184,18 +184,30 @@ services:
       - boutique-network
     restart: unless-stopped
 
-  # Frontend
+  # Frontend — React app, reachable only inside the Docker network
   frontend:
-    image: nginx:alpine
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     container_name: boutique-frontend
-    volumes:
-      - ./frontend/build:/usr/share/nginx/html
-      - ./frontend/nginx.conf:/etc/nginx/conf.d/default.conf
-    ports:
-      - "3000:80"
-    environment:
-      - REACT_APP_API_URL=http://gateway:3001/api
+    expose:
+      - "3000"
     depends_on:
+      - gateway
+    networks:
+      - boutique-network
+    restart: unless-stopped
+
+  # Nginx reverse proxy — the public entrypoint on host port 80
+  nginx:
+    image: nginx:alpine
+    container_name: boutique-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./frontend/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - frontend
       - gateway
     networks:
       - boutique-network

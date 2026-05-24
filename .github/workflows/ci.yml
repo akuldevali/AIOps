@@ -1,9 +1,7 @@
 name: Boutique CI Pipeline
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 env:
   AWS_REGION: ${{ secrets.AWS_REGION }}
@@ -94,13 +92,3 @@ jobs:
           git add gitops/k8s/
           git diff --staged --quiet || git commit -m "ci: update image tags to ${{ github.sha }}"
           git push
-
-      - name: Build Docker Image
-        run: |
-          docker build \
-            -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/${{ matrix.service }}:$IMAGE_TAG \
-            ./services/${{ matrix.service }}
-      - name: Push Docker Image
-        run: |
-          docker push \
-          ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/${{ matrix.service }}:$IMAGE_TAG

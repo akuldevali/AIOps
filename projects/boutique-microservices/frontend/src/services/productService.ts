@@ -14,7 +14,7 @@ const getImageUrl = (product: any): string => {
 
 export const productService = {
   getAll: async (): Promise<Product[]> => {
-    console.log('[ProductService] Fetching products from:', process.env.REACT_APP_API_URL || 'http://localhost:3003');
+    console.log('[ProductService] Fetching products from:', process.env.REACT_APP_API_URL || '/api');
     try {
       const response = await apiClient.get('/products');
       const apiResponse = response.data;

@@ -18,9 +18,6 @@ spec:
           image: 952662064682.dkr.ecr.us-east-1.amazonaws.com/frontend:7167b05a2e00621c4b0ad49b5a4f466184496eae
           ports:
             - containerPort: 3000
-          env:
-            - name: REACT_APP_API_URL
-              value: "http://gateway:3001/api"
 ---
 apiVersion: v1
 kind: Service
